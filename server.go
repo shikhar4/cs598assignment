@@ -10,7 +10,6 @@ import (
 )
 
 const (
-	HOST      = "localhost"
 	PORT      = "8080"
 	TYPE      = "tcp"
 	TIMESTAMP = 0
@@ -19,7 +18,8 @@ const (
 var store = make(map[string]string)
 
 func main() {
-	listen, err := net.Listen(TYPE, HOST+":"+PORT)
+	var host, err = os.Hostname()
+	listen, err := net.Listen(TYPE, host+":"+PORT)
 	if err != nil {
 		log.Fatal(err)
 		os.Exit(1)

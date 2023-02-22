@@ -13,13 +13,13 @@ const (
 	TYPE = "tcp"
 )
 
-func write(key, value string) int {
+func write(key string, value string, hostList []string) int {
 	writeRequest := map[string]string{
 		"type":  "write",
 		"key":   key,
 		"value": value,
 	}
-	tcpServer, err := net.ResolveTCPAddr(TYPE, HOST+":"+PORT)
+	tcpServer, err := net.ResolveTCPAddr(TYPE, "hp021.utah.cloudlab.us"+":"+PORT)
 	conn, err := net.DialTCP(TYPE, nil, tcpServer)
 
 	if err != nil {
@@ -49,7 +49,7 @@ func write(key, value string) int {
 	return 1
 }
 
-func read(key string) int {
+func read(key string, hostList []string) int {
 	writeRequest := map[string]string{
 		"type": "read",
 		"key":  key,
@@ -85,6 +85,7 @@ func read(key string) int {
 }
 
 func main() {
+	hostList := []string{"hp021.utah.cloudlab.us", "hp026.utah.cloudlab.us", "hp011.utah.cloudlab.us", "hp017.utah.cloudlab.us"}
 	for {
 		var userRequestType string
 		fmt.Println("Please enter operation (write/read): ")
@@ -101,7 +102,7 @@ func main() {
 			fmt.Scanln(&value)
 
 			fmt.Println("Sending write request to servers")
-			write(key, value)
+			write(key, value, hostList)
 		}
 
 		if userRequestType == "read" {
@@ -111,7 +112,7 @@ func main() {
 			fmt.Scanln(&key)
 
 			fmt.Println("Sending read request to servers")
-			read(key)
+			read(key, hostList)
 		}
 	}
 
